@@ -1,6 +1,6 @@
 # Kiro CLI pre block. Keep at the top of this file.
 # [[ -f "${HOME}/.local/share/kiro-cli/shell/bashrc.pre.bash" ]] && builtin source
-# "${HOME}/. local/share/kiro-cli/shell/bashrc.pre.bash"
+# "${HOME}/.local/share/kiro-cli/shell/bashrc.pre.bash"
 
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
@@ -8,7 +8,7 @@
 
 # If not running interactively, don't do anything
 case $- in
-	*t*) ;;
+	*i*) ;;
 	  *) return;;
 esac
 
@@ -27,7 +27,7 @@ HISTFILESIZE=2000
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-# If set, the pattern " ** " used in a pathname expansion context will
+# If set, the pattern "**" used in a pathname expansion context will
 # match all files and zero or more directories and subdirectories.
 #shopt -s globstar
 
@@ -41,7 +41,7 @@ fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
-	xterm-color| *- 256color) color_prompt=yes; ;
+	xterm-color|*-256color) color_prompt=yes;;
 esac
 
 # uncomment for a colored prompt, if the terminal has the capability; turned
@@ -66,26 +66,24 @@ fi
 # and 257 will be bold
 COLOR256=()
 COLOR256[0]=$'\e[31m'
-COLOR256[256]=$'\e[om'
+COLOR256[256]=$'\e[0m'
 COLOR256[257]=$'\e[1m'
 
 # Capture last command's exit code before PS1 evaluates
 PROMPT_COMMAND='__last_ret=$?'
 
-PS1='________\n\[\e[1;33m\[\t\[\e[0m\]'
+PS1='________\n\[\e[1;33m\]\t\[\e[0m\]'
 
 # optional git branch
-# optional git branch
-PS1+='$(branch=$(git rev-parse -- abbrev-ref HEAD 2>/dev/null); [[ -n $branch ]] && echo "  --  \[${PROMPT_COLORS[2]}\](\[${PROMPT_COLORS[3]}\]git:$branch\[${PROMPT_COLORS[2]}\]) ")\n'
+PS1+='$(branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null); [[ -n $branch ]] && echo "  --  \[${PROMPT_COLORS[2]}\](\[${PROMPT_COLORS[3]}\]git:$branch\[${PROMPT_COLORS[2]}\]) ")\n'
 
 PS1+='$((( __last_ret != 0 )) && echo "\[${COLOR256[0]}\]($__last_ret)\[${COLOR256[256]}\]")'
 
 if [ "$color_prompt" = yes ]; then
-	PS1+='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:
-	\[\033[01;34m\]\w\[\033[00m\]'
+	PS1+='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]'
 	PS1+='$ '
 else
-	PS1+='${debian_chroot:+($debian_chroot)}\u@\h:\w\ '
+	PS1+='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
 
 unset color_prompt force_color_prompt
@@ -93,23 +91,22 @@ unset color_prompt force_color_prompt
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
-	PS1="\[\e]0; ${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+	PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
 	;;
 *)
 	;;
-esac	
+esac
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
-	test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval
-	"$(dircolors -b)"
-	alias ls='ls -- color=auto'
-	#alias dir='dir -- color=auto'
-	#alias vdir='vdir -- color=auto'
+	test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+	alias ls='ls --color=auto'
+	#alias dir='dir --color=auto'
+	#alias vdir='vdir --color=auto'
 
-	alias grep='grep -- color=auto'
-	alias fgrep='fgrep -- color=auto'
-	alias egrep='egrep -- color=auto'
+	alias grep='grep --color=auto'
+	alias fgrep='fgrep --color=auto'
+	alias egrep='egrep --color=auto'
 fi
 
 # colored GCC warnings and errors
@@ -161,8 +158,6 @@ export LESS_TERMCAP_mh=$(tput dim)
 export LESS_TERMCAP_ZN=$(tput ssubm)
 export LESS_TERMCAP_ZV=$(tput rsubm)
 export LESS_TERMCAP_ZO=$(tput ssupm)
-export LESS_TERMCAP_ZO=$(tput rsupm)
+export LESS_TERMCAP_ZW=$(tput rsupm)
 export PAGER='less'
 export EDITOR='vim'
-
-
